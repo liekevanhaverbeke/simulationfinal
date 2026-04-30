@@ -1,0 +1,8 @@
+#first all pdf and other contex
+context/*
+
+#also do not track cpp code
+cpp-code/*
+
+#finally do not track any pycache files
+__pycache__
