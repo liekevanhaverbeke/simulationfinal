@@ -1,17 +1,9 @@
-import sys, random
+import sys, random, glob
 import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
 import os
 import pandas as pd
-
-import argparse
-
-parser = argparse.ArgumentParser()
-parser.add_argument('filename', nargs='?', default='../input/input-S1-14.txt')
-args = parser.parse_args()
-filename = args.filename
-
 
 sys.path.insert(0, '.')
 
@@ -19,6 +11,9 @@ from simulation import *
 import helper
 
 random.seed(0)
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+OUT_DIR    = os.path.join(SCRIPT_DIR, '..', 'output')
 
 
 
@@ -78,12 +73,11 @@ def run_batch_means(filename, rule, warmup, batch_size, n_batches, seed=0):
     return summary, batches, weekly, weekly1, weekly2
 
 
-def save_results(filename, summary, weekly):
+def save_results(filename, rule, summary, weekly):
     tag = os.path.splitext(os.path.basename(filename))[0].replace('input-', '')
-    out_dir = os.path.join(os.path.dirname(filename), '..', 'output')
-    os.makedirs(out_dir, exist_ok=True)          # creates it if missing
+    os.makedirs(OUT_DIR, exist_ok=True)
 
-    summary_path = os.path.join(out_dir, f'summary-{tag}.txt')
+    summary_path = os.path.join(OUT_DIR, f'summary-{tag}-rule{rule}.txt')
     with open(summary_path, 'w') as f:
         f.write(f"{'metric':<12} {'mean':>10} {'hw':>10} {'lower':>10} {'upper':>10}\n")
         f.write("-" * 55 + "\n")
@@ -91,23 +85,25 @@ def save_results(filename, summary, weekly):
             f.write(f"{metric:<12} {v['mean']:>10.4f} {v['hw']:>10.4f} "
                     f"{v['lower']:>10.4f} {v['upper']:>10.4f}\n")
 
-    output_path = os.path.join(out_dir, f'output-{tag}.csv')
+    output_path = os.path.join(OUT_DIR, f'output-{tag}-rule{rule}.csv')
     pd.DataFrame(weekly).rename_axis('week').to_csv(output_path, float_format='%.6f')
 
-    #print(f"Saved {summary_path} and {output_path}")
 
-rule       = 1
 warmup     = 100
 batch_size = 65
 n_batches  = 60
+rules      = [1, 2, 3, 4]
 
+input_files = sorted(glob.glob(os.path.join(SCRIPT_DIR, '..', 'input', 'generated_input_files', 'input-*.txt')))
 
-summary, batches, weekly, weekly1, weekly2 = run_batch_means(
-    filename   = filename,
-    rule       = rule,
-    warmup     = warmup,
-    batch_size = batch_size,
-    n_batches  = n_batches,
-)
-
-save_results(filename, summary, weekly)
+for filename in input_files:
+    for rule in rules:
+        print(f"Running {os.path.basename(filename)}, rule {rule} ...")
+        summary, batches, weekly, weekly1, weekly2 = run_batch_means(
+            filename   = filename,
+            rule       = rule,
+            warmup     = warmup,
+            batch_size = batch_size,
+            n_batches  = n_batches,
+        )
+        save_results(filename, rule, summary, weekly)
