@@ -43,7 +43,7 @@ import matplotlib.pyplot as plt
 # ---------------------------------------------------------------------------
 # 0.  Output folder (contains all the per-combination CSVs)
 # ---------------------------------------------------------------------------
-DEFAULT_OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
+DEFAULT_OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "output")
 OUTPUT_DIR = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_OUTPUT_DIR
 
 # ---------------------------------------------------------------------------
