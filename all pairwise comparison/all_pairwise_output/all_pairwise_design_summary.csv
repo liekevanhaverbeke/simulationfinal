@@ -1,0 +1,8 @@
+design_id,label,short_label,urgent_slots,strategy,rule,rule_name,mean_OV,lower95,upper95,n_batches,significant_wins,significant_losses,not_significant_pairs
+D1,15 slots | S3 - Bailey-Welch,S3-Bailey-Welch,15,3,2,Bailey-Welch,0.41169767,0.40018726,0.42320807,58,0,0,6
+D2,15 slots | S3 - Benchmarking,S3-Benchmarking,15,3,4,Benchmarking,0.41281362,0.40124389,0.42438335,58,0,0,6
+D3,15 slots | S3 - FCFS,S3-FCFS,15,3,1,FCFS,0.41418927,0.40267324,0.42570529,58,0,0,6
+D4,15 slots | S3 - Blocking,S3-Blocking,15,3,3,Blocking,0.41626060,0.40472250,0.42779870,58,0,0,6
+D5,15 slots | S2 - Bailey-Welch,S2-Bailey-Welch,15,2,2,Bailey-Welch,0.41717090,0.40563106,0.42871075,58,0,0,6
+D6,15 slots | S2 - Benchmarking,S2-Benchmarking,15,2,4,Benchmarking,0.41868217,0.40704874,0.43031561,58,0,0,6
+D7,15 slots | S2 - FCFS,S2-FCFS,15,2,1,FCFS,0.41998200,0.40841750,0.43154649,58,0,0,6
