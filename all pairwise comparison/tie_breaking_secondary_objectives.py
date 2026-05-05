@@ -32,7 +32,7 @@ DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "output"
 OUTPUT_DIR = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else DEFAULT_OUTPUT_DIR
 RESULTS_DIR = SCRIPT_DIR / "tie_breaking_output"
 
-WARMUP = 100
+WARMUP = 0
 BATCH_SIZE = 65
 
 RULE_NAMES = {

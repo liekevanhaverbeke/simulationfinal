@@ -48,7 +48,7 @@ DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "output"
 OUTPUT_DIR = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else DEFAULT_OUTPUT_DIR
 RESULTS_DIR = SCRIPT_DIR / "all_pairwise_output"
 
-WARMUP = 100
+WARMUP = 0
 BATCH_SIZE = 65
 ALPHA = 0.05  # overall significance level, i.e. overall 95% confidence
 
