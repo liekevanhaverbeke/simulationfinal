@@ -6,9 +6,14 @@ This script evaluates the 7 retained alternatives using:
 - OV as the primary objective
 - elScanWT and OT as secondary tie-breaking objectives
 
+Important:
+    This script is descriptive. It does not run Welch or paired pairwise tests.
+    It summarises each retained design separately using ordinary 95% CIs based
+    on batch means. Therefore, no Welch adjustment is needed here.
+
 It reads the raw output CSVs from ../output/
 and writes the results to:
-    all pairwise comparison/tie_breaking_output/
+    tie_breaking_output/
 """
 
 from __future__ import annotations
@@ -32,6 +37,8 @@ DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "output"
 OUTPUT_DIR = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else DEFAULT_OUTPUT_DIR
 RESULTS_DIR = SCRIPT_DIR / "tie_breaking_output"
 
+# The output CSVs created by pipe.py already contain the post-warm-up weekly values.
+# Therefore WARMUP is 0 here.
 WARMUP = 0
 BATCH_SIZE = 65
 
@@ -53,6 +60,19 @@ RETAINED_DESIGNS = [
     (15, 2, 4),  # S2 - Benchmarking
     (15, 2, 1),  # S2 - FCFS
 ]
+
+GENERATED_OUTPUT_FILES = [
+    "tie_breaking_secondary_objectives.csv",
+    "tie_breaking_secondary_metrics.png",
+]
+
+
+def clean_previous_outputs() -> None:
+    """Remove previous generated tie-breaking files from RESULTS_DIR."""
+    for filename in GENERATED_OUTPUT_FILES:
+        path = RESULTS_DIR / filename
+        if path.exists():
+            path.unlink()
 
 
 def csv_path(strategy: int, slots: int, rule: int) -> Path:
@@ -78,7 +98,6 @@ def load_metrics(strategy: int, slots: int, rule: int) -> pd.DataFrame:
         raise ValueError(f"{path.name} is missing required columns: {missing}")
 
     post = df.iloc[WARMUP:].copy()
-
     post["OV"] = post["elAppWT"] / 168.0 + post["urScanWT"] / 9.0
 
     n_batches = len(post) // BATCH_SIZE
@@ -108,9 +127,10 @@ def load_metrics(strategy: int, slots: int, rule: int) -> pd.DataFrame:
 
 def mean_ci(series: pd.Series) -> dict:
     n = len(series)
+    df = n - 1
     mean = series.mean()
     se = series.std(ddof=1) / np.sqrt(n)
-    tcrit = stats.t.ppf(0.975, df=n - 1)
+    tcrit = stats.t.ppf(0.975, df=df)
     hw = tcrit * se
 
     return {
@@ -119,6 +139,7 @@ def mean_ci(series: pd.Series) -> dict:
         "upper95": mean + hw,
         "hw95": hw,
         "n_batches": n,
+        "df": df,
     }
 
 
@@ -145,6 +166,7 @@ def run_analysis() -> pd.DataFrame:
             "OV_mean": ov["mean"],
             "OV_lower95": ov["lower95"],
             "OV_upper95": ov["upper95"],
+            "OV_hw95": ov["hw95"],
 
             "elAppWT_mean": el_app["mean"],
             "urScanWT_mean": ur_scan["mean"],
@@ -152,22 +174,25 @@ def run_analysis() -> pd.DataFrame:
             "elScanWT_mean": el_scan["mean"],
             "elScanWT_lower95": el_scan["lower95"],
             "elScanWT_upper95": el_scan["upper95"],
+            "elScanWT_hw95": el_scan["hw95"],
 
             "OT_mean": ot["mean"],
             "OT_lower95": ot["lower95"],
             "OT_upper95": ot["upper95"],
+            "OT_hw95": ot["hw95"],
 
             "n_batches": ov["n_batches"],
+            "df": ov["df"],
         })
 
     result = pd.DataFrame(rows)
 
-    # Ranking: primary OV, then secondary criteria
+    # Ranking: primary OV, then secondary criteria.
     result["rank_OV"] = result["OV_mean"].rank(method="min", ascending=True).astype(int)
     result["rank_elScanWT"] = result["elScanWT_mean"].rank(method="min", ascending=True).astype(int)
     result["rank_OT"] = result["OT_mean"].rank(method="min", ascending=True).astype(int)
 
-    # Simple tie-breaking score: OV remains primary, secondary metrics only support interpretation
+    # OV remains primary; elScanWT and OT are only used to support interpretation.
     result = result.sort_values(
         ["OV_mean", "elScanWT_mean", "OT_mean"],
         ascending=[True, True, True]
@@ -219,6 +244,7 @@ def plot_secondary_metrics(result: pd.DataFrame) -> Path:
 
 def main() -> None:
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    clean_previous_outputs()
 
     result = run_analysis()
 
@@ -232,6 +258,7 @@ def main() -> None:
     print("=" * 90)
     print(f"Raw output folder: {OUTPUT_DIR}")
     print(f"Results folder:    {RESULTS_DIR}")
+    print("Method: descriptive batch-mean summaries; ordinary 95% CIs; df = n_batches - 1")
     print()
     print(result[
         [
@@ -243,6 +270,8 @@ def main() -> None:
             "rank_OV",
             "rank_elScanWT",
             "rank_OT",
+            "n_batches",
+            "df",
         ]
     ].to_string(index=False, float_format=lambda x: f"{x:.5f}"))
 
