@@ -1,0 +1,13 @@
+screening,interpretation
+screening_1,strategy: significant beter om van 1 naar 2 te gaan; OV daalt.
+screening_1,rule: significant beter om van 1 naar 2 te gaan; OV daalt.
+screening_1,urgent slots: significant beter om van 10 naar 12 te gaan; OV daalt.
+screening_2,strategy: significant slechter om van 2 naar 3 te gaan; OV stijgt.
+screening_2,rule: significant slechter om van 2 naar 3 te gaan; OV stijgt.
+screening_2,urgent slots: significant slechter om van 12 naar 14 te gaan; OV stijgt.
+screening_3,strategy: significant beter om van 2 naar 3 te gaan; OV daalt.
+screening_3,rule: significant slechter om van 2 naar 3 te gaan; OV stijgt.
+screening_3,urgent slots: significant slechter om van 14 naar 16 te gaan; OV stijgt.
+screening_4,strategy: significant slechter om van 2 naar 3 te gaan; OV stijgt.
+screening_4,rule: geen significant hoofdeffect tussen 2 en 4.
+screening_4,urgent slots: geen significant hoofdeffect tussen 12 en 14.
