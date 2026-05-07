@@ -91,7 +91,7 @@ def save_results(filename, rule, summary, weekly):
 
 warmup     = 100
 batch_size = 65
-n_batches  = 60
+n_batches  = 600
 rules      = [1, 2, 3, 4]
 
 input_files = sorted(glob.glob(os.path.join(SCRIPT_DIR, '..', 'input', 'generated_input_files', 'input-*.txt')))

@@ -6,3 +6,6 @@ cpp-code/*
 
 #finally do not track any pycache files
 __pycache__
+
+#venv
+venv
