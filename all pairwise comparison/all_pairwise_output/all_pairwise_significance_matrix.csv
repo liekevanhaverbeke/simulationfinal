@@ -1,8 +1,0 @@
-,S3-Bailey-Welch,S3-Benchmarking,S3-FCFS,S3-Blocking,S2-Bailey-Welch,S2-Benchmarking,S2-FCFS
-S3-Bailey-Welch,—,row better,row better,row better,row better,row better,row better
-S3-Benchmarking,column better,—,row better,row better,row better,row better,row better
-S3-FCFS,column better,column better,—,row better,row better,row better,row better
-S3-Blocking,column better,column better,column better,—,n.s.,row better,row better
-S2-Bailey-Welch,column better,column better,column better,n.s.,—,row better,row better
-S2-Benchmarking,column better,column better,column better,column better,column better,—,row better
-S2-FCFS,column better,column better,column better,column better,column better,column better,—
