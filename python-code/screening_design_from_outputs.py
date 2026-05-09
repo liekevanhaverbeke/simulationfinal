@@ -405,7 +405,7 @@ def plot_effects(effects: pd.DataFrame, title: str, output_path: Path) -> None:
 def run_screening_designs(
     output_dir: str = "output",
     results_dir: str | None = None,
-    warmup: int = 100,
+    warmup: int = 0,
     response: str = "OV",
     confidence: float = 0.95,
     strict: bool = False,
