@@ -4,6 +4,7 @@ from scipy import stats
 import matplotlib.pyplot as plt
 import os
 import pandas as pd
+import re
 
 sys.path.insert(0, '.')
 
@@ -89,14 +90,41 @@ def save_results(filename, rule, summary, weekly):
     pd.DataFrame(weekly).rename_axis('week').to_csv(output_path, float_format='%.6f')
 
 
-warmup     = 100
-batch_size = 65
+warmup_by_slots ={10: 150,
+    11: 350,
+    12: 350,
+    13: 500,
+    14: 500,
+    15: 600, 
+    16: 600,
+    17: 1000,
+    18: 1000,
+    19: 1000,
+    20: 1000,
+}
+batch_size_by_slots = {
+    10:  14,
+    11:  28,
+    12:  28,
+    13:  42,
+    14:  42,
+    15: 139,
+    16: 139,
+    17: 705,
+    18: 705,
+    19: 1000,
+    20: 1000,
+}
+
 n_batches  = 600
 rules      = [1, 2, 3, 4]
 
 input_files = sorted(glob.glob(os.path.join(SCRIPT_DIR, '..', 'input', 'generated_input_files', 'input-*.txt')))
 
 for filename in input_files:
+    slots = int(re.search(r'input-S\d+-(\d+)\.txt', os.path.basename(filename)).group(1))
+    warmup = warmup_by_slots.get(slots, 1000)
+    batch_size = batch_size_by_slots.get(slots, 1000)
     for rule in rules:
         print(f"Running {os.path.basename(filename)}, rule {rule} ...")
         summary, batches, weekly, weekly1, weekly2 = run_batch_means(
