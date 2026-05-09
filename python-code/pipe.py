@@ -116,7 +116,7 @@ batch_size_by_slots = {
     20: 1000,
 }
 
-n_batches  = 10
+n_batches  = 30
 rules      = [1, 2, 3, 4]
 
 input_files = sorted(glob.glob(os.path.join(SCRIPT_DIR, '..', 'input', 'generated_input_files', 'input-*.txt')))
