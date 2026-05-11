@@ -186,8 +186,8 @@ def plot_ci_chart(
     n = len(chart_rows)
 
     fig, ax = plt.subplots(figsize=(12, 1.45 * n + 2.4))
-    fig.patch.set_facecolor('#F7F7F7')
-    ax.set_facecolor('#F7F7F7')
+    fig.patch.set_facecolor('white')
+    ax.set_facecolor('white')   
 
     color_better = '#27AE60'   # green
     color_worse  = '#C0392B'   # red
