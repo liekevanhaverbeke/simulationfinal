@@ -1,26 +1,3 @@
-"""
-screening_design_from_outputs.py
-
-Screening design zoals in het voorbeeldrapport:
-- leest bestaande output CSV's, bv. output/output-S1-14-rule1.csv
-- berekent OV = elAppWT/168 + urScanWT/9
-- voert 2^3 screening designs uit met factoren:
-    S = strategy
-    R = rule
-    N = aantal urgent slots
-- fit per screening een full factorial coded linear model:
-    OV = beta0 + betaS*S + betaR*R + betaN*N
-         + betaSR*S*R + betaSN*S*N + betaRN*R*N + betaSRN*S*R*N
-- maakt confidence intervals voor effecten
-- markeert effecten significant als het CI 0 niet bevat
-- schrijft resultaten weg naar een aparte outputmap
-
-Run vanuit project root:
-    python python-code/screening_design_from_outputs.py
-
-Of expliciet:
-    python python-code/screening_design_from_outputs.py --output-dir output --warmup 100
-"""
 
 from __future__ import annotations
 
